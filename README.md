@@ -1,5 +1,7 @@
 # AI-Powered README Generator
 
+<img width="735" alt="Screenshot 2024-08-16 at 5 33 47 PM" src="https://github.com/user-attachments/assets/5d650269-addd-4bd0-851e-ab29b0be9f36">
+
 This repository contains a Python script that automatically generates README.md files for GitHub repositories using Google AI. 
 
 ## Features
