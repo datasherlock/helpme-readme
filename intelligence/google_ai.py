@@ -1,39 +1,42 @@
 import base64
 import vertexai
-from vertexai.generative_models import GenerativeModel, Part, SafetySetting, FinishReason
-import vertexai.preview.generative_models as generative_models
+import google.generativeai as genai
+# from vertexai.generative_models import GenerativeModel, Part, SafetySetting, FinishReason
+# import vertexai.preview.generative_models as generative_models
+# from google.cloud import aiplatform
+import os
+from dotenv import load_dotenv
+import streamlit as st
+
+# Load environment variables from .env file
+
+
 
 
 class GOOGLE_AI:
     def __init__(self):
-        vertexai.init(project="datasherlock", location="us-central1")
-        self.model = GenerativeModel(
-            "gemini-1.5-pro-001",
-        )
+        # load_dotenv()
+        if 'GOOGLE_API_KEY' in st.session_state:
+            self.api_key = st.session_state['GOOGLE_API_KEY']
+        else:
+            self.api_key = None
+            exit(1)
+
+        genai.configure(api_key=self.api_key)
         self.generation_config = {
             "max_output_tokens": 8192,
             "temperature": 1,
             "top_p": 0.95,
         }
 
-        self.safety_settings = [
-            SafetySetting(
-                category=SafetySetting.HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-                threshold=SafetySetting.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE
-            ),
-            SafetySetting(
-                category=SafetySetting.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-                threshold=SafetySetting.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE
-            ),
-            SafetySetting(
-                category=SafetySetting.HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-                threshold=SafetySetting.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE
-            ),
-            SafetySetting(
-                category=SafetySetting.HarmCategory.HARM_CATEGORY_HARASSMENT,
-                threshold=SafetySetting.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE
-            ),
-        ]
+
+        self.model = genai.GenerativeModel(
+            "gemini-1.5-pro-001",
+            generation_config=self.generation_config
+        )
+
+
+
 
         self.context = """
         You are the world\'s leading developer relations consultant. You write thorough, understandable and human-like documentation.
@@ -47,11 +50,8 @@ class GOOGLE_AI:
         responses = self.model.generate_content(
             [input],
             generation_config=self.generation_config,
-            safety_settings=self.safety_settings,
+           # safety_settings=self.safety_settings,
             stream=True,
         )
         return responses
-
-
-
 
