@@ -11,10 +11,12 @@ def validate_apikey():
     with st.sidebar:
         if 'GOOGLE_API_KEY' not in st.session_state:
             api_key_input = st.text_input("Enter your Google API Key from: https://aistudio.google.com/app/apikey", type="password")
-            api_button = st.button("Save Key In Session", key="apibutton")
+            api_button = st.button("Save", key="apibutton")
+            st.info("_Note: Your API key will not be saved anywhere and will be safe in your local session. Refreshing the page will wipe it from memory."
+                    "Do not share your key with anyone_")
 
             if api_button:
-                if api_key_input is not None:
+                if len(api_key_input) > 0:
                     # Store the API key in session state
                     st.session_state['GOOGLE_API_KEY'] = api_key_input
                     # st.success("API key stored in session successfully! Please restart the app.")

@@ -55,16 +55,17 @@ class GOOGLE_AI:
     def generate_readme(self, text):
         input = self.context + '~```~' + text + '~```~'
         try:
-            responses = self.model.generate_content(
-                [input],
-                generation_config=self.generation_config,
-               # safety_settings=self.safety_settings,
-                stream=True,
-            )
+            with st.status("Asking Google AI to generate the README..."):
+                responses = self.model.generate_content(
+                    [input],
+                    generation_config=self.generation_config,
+                   # safety_settings=self.safety_settings,
+                    stream=True,
+                )
         except InvalidArgument as e:
-            st.warning("Invalid API Key")
+            st.warning("Invalid API Key Provided. Please get the correct one from https://aistudio.google.com/app/apikey")
             validate_apikey()
-            exit(1)
+            exit(-1)
 
             # st.rerun()
         return responses

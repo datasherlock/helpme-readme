@@ -9,8 +9,13 @@ def main():
     set_page_header_format()
     validate_apikey()
     repo_url = st.text_input("__Github Repo URL__", value="https://github.com/google-gemini/gemini-api-quickstart.git")
-    submit = st.button("Submit", key="submit")
     repo = GITREPO(repo_url)
+    submit = False
+    if 'GOOGLE_API_KEY' in st.session_state:
+        submit = st.button("Submit", key="submit")
+    else:
+        st.warning("Please provide an API key")
+
     if submit:
 
         with st.status("Merging Repo..."):
@@ -25,12 +30,10 @@ def main():
         except Exception as e:
             print(str(e))
 
-
-        with st.status("Asking Google AI to generate the README..."):
-            responses = ask_google_ai.generate_readme(from_code)
-            for response in responses:
-                repo.write_repo_readme(response.text)
-            #download_readme = st.button("Download README", key = "download_readme")
+        responses = ask_google_ai.generate_readme(from_code)
+        for response in responses:
+            repo.write_repo_readme(response.text)
+        #download_readme = st.button("Download README", key = "download_readme")
 
         readme, output = st.columns(2)
         with readme:
