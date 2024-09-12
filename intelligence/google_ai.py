@@ -1,4 +1,6 @@
 import base64
+from logging import exception
+
 import vertexai
 import google.generativeai as genai
 # from vertexai.generative_models import GenerativeModel, Part, SafetySetting, FinishReason
@@ -7,6 +9,9 @@ import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 import streamlit as st
+from google.api_core.exceptions import InvalidArgument
+from utils.common import validate_apikey
+
 
 # Load environment variables from .env file
 
@@ -39,19 +44,28 @@ class GOOGLE_AI:
 
 
         self.context = """
-        You are the world\'s leading developer relations consultant. You write thorough, understandable and human-like documentation.
-        You will be given a code base which has been merged from multiple files into a single file.
-        This code will be enclosed within ~```~.
-        You have to generate a README.md that will be hosted in Github. Provide the output in markdown language that can be copy pasted
+        Write a detailed and professional README for a software project. 
+        The README should include the following sections: Project Title, Project Description, Features, Installation Instructions, 
+        Usage Guide, Example Code Snippet, Contributing Guidelines, 
+        License Information, and Contact Details. The README should be clear, easy to follow, and written in markdown format. 
+        Ensure that the tone is friendly and helpful, providing necessary details for users and developers. Also generate a project banner
+        in the README. The README must follow all the recommended best practices
         """
 
     def generate_readme(self, text):
         input = self.context + '~```~' + text + '~```~'
-        responses = self.model.generate_content(
-            [input],
-            generation_config=self.generation_config,
-           # safety_settings=self.safety_settings,
-            stream=True,
-        )
+        try:
+            responses = self.model.generate_content(
+                [input],
+                generation_config=self.generation_config,
+               # safety_settings=self.safety_settings,
+                stream=True,
+            )
+        except InvalidArgument as e:
+            st.warning("Invalid API Key")
+            validate_apikey()
+            exit(1)
+
+            # st.rerun()
         return responses
 
