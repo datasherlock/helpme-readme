@@ -31,9 +31,10 @@ def main():
             print(str(e))
 
         responses = ask_google_ai.generate_readme(from_code)
-        for response in responses:
-            repo.write_repo_readme(response.text)
-        #download_readme = st.button("Download README", key = "download_readme")
+        with st.status("Receiving Response..."):
+            for response in responses:
+                repo.write_repo_readme(response.text)
+            #download_readme = st.button("Download README", key = "download_readme")
 
         readme, output = st.columns(2)
         with readme:
