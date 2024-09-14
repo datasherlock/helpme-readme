@@ -20,7 +20,7 @@ class GITREPO:
     def _clone_repo(self):
         """Clone the given GitHub repository to a local directory."""
 
-        print(f"Cloning the repository from {self.repo_url} to {self.clone_dir}...")
+
         if os.path.exists(self.clone_dir):
             shutil.rmtree(self.clone_dir)
         git.Repo.clone_from(self.repo_url, self.clone_dir)
@@ -28,7 +28,7 @@ class GITREPO:
     def _merge_files(self):
         """Merge all files in the repository into a single file with annotations."""
 
-        print(f"Merging files into {self.output_file}...")
+
         if os.path.exists(self.output_file):
             os.remove(self.output_file)
 
@@ -46,7 +46,7 @@ class GITREPO:
                             merged_file.write(source_file.read())
                         merged_file.write(f"\n\n# --- End of {relative_path} ---\n\n")
 
-        print(f"Files have been merged into {self.output_file}")
+
 
     def _delete_repo(self):
         shutil.rmtree(self.clone_dir)

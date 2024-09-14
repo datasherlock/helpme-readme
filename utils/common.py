@@ -8,12 +8,14 @@ import streamlit as st
 #@st.fragment
 def validate_apikey():
     # Prompt the user to enter the API key securely
-    with st.sidebar:
-        if 'GOOGLE_API_KEY' not in st.session_state:
-            api_key_input = st.text_input("Enter your Google API Key from: https://aistudio.google.com/app/apikey", type="password")
-            api_button = st.button("Save", key="apibutton")
-            st.info("_Note: Your API key will not be saved anywhere and will be safe in your local session. Refreshing the page will wipe it from memory."
-                    "Do not share your key with anyone_")
+        if 'GOOGLE_API_KEY' in st.session_state:
+            st.info(f"""A Valid API Key is available for this session. Refresh the page to enter a new API key""")
+        elif 'GOOGLE_API_KEY' not in st.session_state:
+            with st.popover("Enter API Key"):
+                api_key_input = st.text_input("Enter your Google API Key from: https://aistudio.google.com/app/apikey", label_visibility='hidden', type="password")
+                st.info("_Note: Your API key will not be saved anywhere and will be safe in your local session. Refreshing the page will wipe it from memory."
+                        "Do not share your key with anyone_")
+                api_button = st.button("Submit API key")
 
             if api_button:
                 if len(api_key_input) > 0:
@@ -22,8 +24,10 @@ def validate_apikey():
                     # st.success("API key stored in session successfully! Please restart the app.")
                     # st.stop()  # Stop execution until the user restarts the app
                     #api_button.disabled = True
+                    st.rerun()
                 else:
                     st.error("API key cannot be empty. Please try again.")
+
 
 def parse_args(args):
     parser = argparse.ArgumentParser()

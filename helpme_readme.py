@@ -7,14 +7,14 @@ import streamlit as st
 
 def main():
     set_page_header_format()
-    validate_apikey()
     repo_url = st.text_input("__Github Repo URL__", value="https://github.com/google-gemini/gemini-api-quickstart.git")
+    validate_apikey()
     repo = GITREPO(repo_url)
     submit = False
     if 'GOOGLE_API_KEY' in st.session_state:
         submit = st.button("Submit", key="submit")
     else:
-        st.warning("Please provide an API key")
+        st.warning("Enter your Google API Key from: https://aistudio.google.com/app/apikey")
 
     if submit:
 

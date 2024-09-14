@@ -1,4 +1,5 @@
 import base64
+import sys
 from logging import exception
 
 import vertexai
@@ -62,11 +63,10 @@ class GOOGLE_AI:
                    # safety_settings=self.safety_settings,
                     stream=True,
                 )
+            return responses
         except InvalidArgument as e:
             st.warning("Invalid API Key Provided. Please get the correct one from https://aistudio.google.com/app/apikey")
-            validate_apikey()
-            exit(-1)
+            st.session_state.clear()
+            st.rerun()
 
-            # st.rerun()
-        return responses
 
